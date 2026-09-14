@@ -12,8 +12,8 @@ change—and, when requested, turn it into a reusable Remotion recipe.
 
 | Request | Deliverable |
 | --- | --- |
-| Explain a sequence | Timestamped scene map of content, product actions, presentation effects, transitions, and holds |
-| Explain one animation | Evidence-backed states, layers, motion grammar, typography, layout, and implementation hypotheses |
+| Explain a sequence | Timestamped scene map of content, product actions, presentation effects, transitions, and holds, plus an illustrated HTML field guide |
+| Explain one animation | Evidence-backed states, layers, motion grammar, typography, layout, implementation hypotheses, and an illustrated HTML field guide |
 | Replicate or create a recipe | Scoped breakdown, reusable Remotion component, recipe card, reference-inspired render, adaptation render, and verification limits |
 
 Default to explanation when no build is requested. If asked only for a written
@@ -36,17 +36,22 @@ settled state even when that crosses a shot cut.
 2. **Model the mechanism.** Track persistent objects, layers, anchors, phase
    order, typography, layout, and replaceable inputs. For disputed transitions,
    run the decisive-frame falsification loop before selecting an implementation.
-3. **Reconstruct only when requested.** For an offline video, follow
+3. **Illustrate explanations.** Follow the
+   [HTML illustration guide](references/html-illustration.md). Build a
+   self-contained visual field guide with a timeline, representative states,
+   relationships, evidence labels, and limitations. Use neutral explanatory
+   diagrams; do not present the artifact as a reconstruction.
+4. **Reconstruct only when requested.** For an offline video, follow
    [Remotion reconstruction](references/remotion-reconstruction.md): use the
    existing project, explicit frame-derived motion, and deterministic state.
    For a requested live drag, scroll, or scrub interaction, follow
    [interaction reconstruction](references/interaction-reconstruction.md) in the
    existing app instead; do not impose Remotion on working UI.
-4. **Verify rendered behavior.** Follow
+5. **Verify rendered behavior.** Follow
    [verification and evidence](references/verification-and-evidence.md). Inspect
    representative states and full playback; produce evidence proportional to
    the claim.
-5. **Extract the reusable rule.** Use the
+6. **Extract the reusable rule.** Use the
    [recipe template](references/recipe-template.md). Name the mechanism rather
    than the source brand, and separate invariants, tunable values, decoration,
    tested ranges, and unknowns.
@@ -77,4 +82,5 @@ Before completion, confirm:
 - failed mechanisms were genuinely falsified at a decisive frame;
 - no source framework or implementation provenance was invented;
 - changed content tests the reusable rule rather than only changing colors;
+- the HTML field guide is linked, responsive, accessible, and visibly verified;
 - verification claims cite executed checks and inspected rendered media.
