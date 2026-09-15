@@ -40,7 +40,8 @@ settled state even when that crosses a shot cut.
    [HTML illustration guide](references/html-illustration.md). Build a
    self-contained visual field guide with a timeline, representative states,
    relationships, evidence labels, and limitations. Use neutral explanatory
-   diagrams; do not present the artifact as a reconstruction.
+   diagrams; do not present the artifact as a reconstruction. Use the HIG for
+   visual character and the reading-oriented page direction specified in the guide.
 4. **Reconstruct only when requested.** For an offline video, follow
    [Remotion reconstruction](references/remotion-reconstruction.md): use the
    existing project, explicit frame-derived motion, and deterministic state.
