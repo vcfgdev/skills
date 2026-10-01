@@ -1,0 +1,486 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Thermal PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;800&family=Geist+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap">
+<style>
+/* Layout: one centered column stacked like the video: live artwork, step selector, step caption, the file itself; tuning and notes share a row below. */
+:root {
+  --bg: #ffffff;
+  --ink: #10131f;
+  --muted: #5f6578;
+  --faint: #a2a7b6;
+  --rule: #e5e7ed;
+  --panel: #fbfbfc;
+  --chip: #f1f2f6;
+  --hl: #e7f6ec;
+  --tag: #10131f;
+  --attr: #7a8195;
+  --str: #c0461f;
+  --focus: #0b70c0;
+  --plate: #ffffff;
+  --plate-ink: #10131f;
+  --plate-rule: #e3e5ec;
+  --font-display: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-body: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "Geist Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0d16; --ink: #e8eaf2; --muted: #9ba1b5; --faint: #5a6077; --rule: #22263a;
+    --panel: #0f1220; --chip: #181c2c; --hl: #10291b; --tag: #e8eaf2; --attr: #8a92a8;
+    --str: #ff9466; --focus: #6ccbf6; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b0d16; --ink: #e8eaf2; --muted: #9ba1b5; --faint: #5a6077; --rule: #22263a;
+  --panel: #0f1220; --chip: #181c2c; --hl: #10291b; --tag: #e8eaf2; --attr: #8a92a8;
+  --str: #ff9466; --focus: #6ccbf6; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font-body); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 72px; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.top h1 { margin: 0; font: 600 15px/1.3 var(--font-body); letter-spacing: -0.005em; }
+.top .file-meta { font: 12.5px/1.3 var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.lede { margin: 6px 0 0; color: var(--muted); font-size: 14px; max-width: 62ch; }
+
+.art { margin: 18px 0 16px; }
+.plate { background: var(--plate); border-radius: 18px; padding: clamp(6px, 2.6vw, 26px) clamp(2px, 1.6vw, 18px); }
+.plate svg { display: block; width: 100%; height: auto; }
+
+.steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.step {
+  display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 13px;
+  border-radius: 999px; border: 1px solid var(--rule); background: transparent;
+  color: var(--muted); font-size: 13.5px; font-weight: 500; cursor: pointer;
+}
+.step .n { font: 500 11.5px/1 var(--font-mono); color: var(--faint); }
+.step:hover { color: var(--ink); background: var(--chip); }
+.step[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.step[aria-pressed="true"] .n { color: inherit; opacity: .55; }
+.actions { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; }
+.play, .motion {
+  display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 8px;
+  border: 0; background: transparent; color: var(--ink); font-size: 13.5px; font-weight: 500; cursor: pointer;
+}
+.motion { color: var(--muted); }
+.play svg, .motion svg { width: 11px; height: 11px; fill: currentColor; }
+.play:hover, .motion:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+.caption { margin: 26px 0 18px; }
+.caption h2 {
+  margin: 0; font-family: var(--font-display); font-weight: 300; font-size: clamp(2rem, 5vw, 3.1rem);
+  font-variation-settings: "opsz" 72; letter-spacing: -0.03em; line-height: 1.04; text-wrap: balance;
+}
+.caption p { margin: 8px 0 0; color: var(--muted); font-size: 15px; max-width: 60ch; }
+
+.code { border: 1px solid var(--rule); border-radius: 14px; background: var(--panel); overflow: hidden; }
+.codebar { display: flex; align-items: center; gap: 10px; padding: 9px 10px 9px 16px; border-bottom: 1px solid var(--rule); }
+.codebar .file { font: 500 12.5px/1 var(--font-mono); }
+.codebar .size { font: 12px/1 var(--font-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.copy {
+  margin-left: auto; height: 30px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--rule);
+  background: var(--bg); font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.copy:hover { background: var(--chip); }
+.codebox { position: relative; max-height: 468px; overflow: auto; }
+.codebox pre { margin: 0; padding: 12px 0; font: 12.75px/1.78 var(--font-mono); min-width: max-content; }
+.ln { display: block; padding-right: 20px; white-space: pre; }
+.ln.hl { background: var(--hl); }
+.no { display: inline-block; width: 3.1em; padding-right: 1.25em; text-align: right; color: var(--faint); user-select: none; -webkit-user-select: none; }
+.t { color: var(--tag); }
+.a { color: var(--attr); }
+.s { color: var(--str); }
+.p { color: var(--faint); }
+.sw { display: inline-block; width: .82em; height: .82em; margin-left: .45em; border-radius: 3px; vertical-align: -0.08em; box-shadow: inset 0 0 0 1px rgba(127, 134, 155, .35); }
+.lut { display: inline-block; width: 10em; height: .82em; margin-left: .7em; border-radius: 3px; vertical-align: -0.08em; }
+.fallback { display: block; width: 100%; height: 140px; margin: 0; padding: 10px 16px; border: 0; border-bottom: 1px solid var(--rule); background: var(--bg); color: var(--ink); font: 12px/1.5 var(--font-mono); resize: vertical; }
+.fallback-note { margin: 0; padding: 8px 16px 0; font-size: 12.5px; color: var(--muted); }
+
+.lower { display: grid; grid-template-columns: 1fr; gap: 34px; margin-top: 38px; }
+@media (min-width: 760px) { .lower { grid-template-columns: 1.05fr 1fr; gap: 44px; } }
+.lower section { min-width: 0; }
+.label { margin: 0 0 14px; font: 600 11.5px/1 var(--font-body); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+
+.knobs { display: grid; gap: 12px; }
+.knob { display: grid; grid-template-columns: 7.6em minmax(0, 1fr) 3.9em; align-items: center; gap: 12px; }
+.knob label { font-size: 14px; }
+.knob output { font: 12.5px/1 var(--font-mono); color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.knob input[type="range"] { width: 100%; accent-color: var(--ink); }
+.knob input[type="text"] {
+  width: 100%; height: 34px; padding: 0 10px; border: 1px solid var(--rule); border-radius: 8px;
+  background: var(--bg); font-size: 14px; font-weight: 600; letter-spacing: .02em;
+}
+.reset { justify-self: start; height: 30px; padding: 0; border: 0; background: none; color: var(--muted); font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.reset:hover { color: var(--ink); }
+
+.notes dl { margin: 0; display: grid; grid-template-columns: 6.4em minmax(0, 1fr); gap: 10px 14px; font-size: 14px; }
+.notes dt { color: var(--muted); }
+.notes dd { margin: 0; }
+.notes .aside { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 13.5px; }
+code.inline { font: 12.5px var(--font-mono); }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  padding: 8px 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 13px; font-weight: 500;
+}
+
+@media (max-width: 560px) {
+  .step { padding: 0 11px; }
+  .step .word { display: none; }
+  .step[data-step="all"] .word { display: inline; }
+  .actions { margin-left: -8px; }
+  .knob { grid-template-columns: 6.6em minmax(0, 1fr) 3.4em; gap: 10px; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Thermal PRO</h1>
+    <span class="file-meta" id="meta">pro-thermal.svg</span>
+  </header>
+  <p class="lede">The SVG from your video, rebuilt. Letter outlines, stripe timing and color table are fitted to its frames.</p>
+
+  <figure class="art" style="margin-inline:0">
+    <div class="plate" id="plate"></div>
+  </figure>
+
+  <div class="steps" role="group" aria-label="Build steps">
+    <button class="step" type="button" data-step="1"><span class="n">1</span><span class="word">Path</span></button>
+    <button class="step" type="button" data-step="2"><span class="n">2</span><span class="word">Shadow</span></button>
+    <button class="step" type="button" data-step="3"><span class="n">3</span><span class="word">Stripe</span></button>
+    <button class="step" type="button" data-step="4"><span class="n">4</span><span class="word">Color</span></button>
+    <button class="step" type="button" data-step="5"><span class="n">5</span><span class="word">Grain</span></button>
+    <button class="step" type="button" data-step="all"><span class="word">Whole file</span></button>
+    <span class="actions">
+      <button class="play" type="button" id="play"></button>
+      <button class="motion" type="button" id="motion" aria-pressed="false"></button>
+    </span>
+  </div>
+
+  <div class="caption" aria-live="polite">
+    <h2 id="stepTitle">That's the whole file.</h2>
+    <p id="stepNote">One path, one gradient, two filters. No script, no images.</p>
+  </div>
+
+  <section class="code" aria-label="SVG source">
+    <div class="codebar">
+      <span class="file">pro-thermal.svg</span>
+      <span class="size" id="size"></span>
+      <button class="copy" id="copy" type="button">Copy SVG</button>
+    </div>
+    <div id="fallbackSlot"></div>
+    <div class="codebox" id="codebox"><pre id="code"></pre></div>
+  </section>
+
+  <div class="lower">
+    <section aria-labelledby="tuneLabel">
+      <h3 class="label" id="tuneLabel">Tune it</h3>
+      <div class="knobs">
+        <div class="knob"><label for="word">Word</label><input type="text" id="word" maxlength="12" value="PRO" autocomplete="off" spellcheck="false"><output for="word" id="wordOut">traced</output></div>
+        <div class="knob"><label for="dur">Stripe loop</label><input type="range" id="dur" min="1" max="12" step="0.1" value="4.4"><output for="dur" id="durOut"></output></div>
+        <div class="knob"><label for="angle">Stripe angle</label><input type="range" id="angle" min="-90" max="90" step="1" value="-35"><output for="angle" id="angleOut"></output></div>
+        <div class="knob"><label for="edge">Edge shadow</label><input type="range" id="edge" min="0" max="16" step="0.5" value="8"><output for="edge" id="edgeOut"></output></div>
+        <div class="knob"><label for="heat">Heat blur</label><input type="range" id="heat" min="0" max="16" step="0.1" value="7.3"><output for="heat" id="heatOut"></output></div>
+        <div class="knob"><label for="grain">Grain</label><input type="range" id="grain" min="0" max="0.4" step="0.01" value="0.14"><output for="grain" id="grainOut"></output></div>
+        <button class="reset" id="reset" type="button">Reset to the video's values</button>
+      </div>
+    </section>
+
+    <section class="notes" aria-labelledby="notesLabel">
+      <h3 class="label" id="notesLabel">Matched to the video</h3>
+      <dl>
+        <dt>Letters</dt><dd>One path traced from the video frame, a Helvetica-style bold. 1.2 KB of path data.</dd>
+        <dt>Shadow</dt><dd>The shape's alpha blurred by 8 units, times the same <code class="inline">#9d9d9d</code> grey.</dd>
+        <dt>Stripe</dt><dd>486-unit period on a 4.4 s loop, moving up and to the right at 35°. The video's last two seconds play at half speed; set the loop to 8.8 s to match them.</dd>
+        <dt>Color</dt><dd>A 17-step table fitted to the frames: navy, cyan, peach, orange, red, pink, white.</dd>
+        <dt>Grain</dt><dd>Fractal noise mixed in at 0.14, close to the video's noise level.</dd>
+      </dl>
+      <p class="aside">The code on screen in the video is shortened. The path and tables are cut off, and the gradient and noise lines are simplified. This file is complete and runs as is in any modern browser.</p>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const PATH = "M0 2.7h56.5q22.8 0 33.8 10.1q11.1 10.2 11.1 28.2q0 8.3-2.8 15.3q-2.7 7.2-8 13q-5.3 5.8-12.7 8.8q-8.3 3.1-18.5 3.1h-29v45.1h-30.4v-123.6zM30.4 27.5v28.8h19.8q10.7 0 15.5-3.4q4.7-3.3 4.7-10.6q0-7.4-4.7-11q-4.8-3.8-15.5-3.8h-19.8zM108.3 2.7h66.8q6.8 0 13.4 2.5q7.1 2.5 12.1 7.2q4.8 4.6 7.2 10.9q2.4 6 2.4 14.2q0 24.9-17.8 35.2q2.8 1 4.4 1.9q4.3 2.2 6.2 5.9q1.8 3.3 2.5 9.7q.5 4.7 .8 19.3q0 3.1 .9 4.7q.9 1.4 3.3 2.6l1.5 .8v8.7h-32.2l-.6-1.4q-2.1-4.7-2.8-8.9q-.6-4.1-.6-12.6v-.1l.3-11.5q0-4.8-2.3-6.8q-2.3-2.1-7.9-2.1h-27v43.4h-30.6v-123.6zM138.9 27.8v30h28.2q7.2 0 9.8-3.8q2.1-3.3 2.1-12.3q0-8.3-2.2-11q-2.6-2.9-9.7-2.9h-28.2zM275.6 0q13.4 0 24.8 4.6q11.2 4.5 19.6 12.8q8.2 8.3 12.6 20.3q4.4 12.7 4.4 27.3q0 14.3-4.4 26.8q-4.4 11.7-12.6 19.9q-8.4 8.3-19.6 12.7q-11.3 4.6-24.6 4.6q-13.5 0-24.8-4.6q-11.1-4.5-19.4-12.8q-8.1-8.3-12.4-20.2q-4.3-12.6-4.3-27.2q0-14.1 4.3-26.4q4.3-11.9 12.3-20.1q8.3-8.4 19.3-13q11.4-4.7 24.8-4.7zM275.8 24.6q-6.8 0-12.4 2.6q-5.5 2.5-9.4 7.6q-4.1 5.4-6.2 12.7q-2.3 7.6-2.3 16.7q0 9.4 2.3 17.1q2.1 7.5 6.1 12.8q4 5.1 9.5 7.5q5.6 2.5 12.4 2.5q6.7 0 12.3-2.5q5.5-2.4 9.5-7.5q4-5.2 6.2-12.5q2.3-7.6 2.3-16.7q0-9.4-2.2-17.2q-2.2-7.5-6.2-12.8q-3.9-5.3-9.4-7.7q-5.7-2.6-12.5-2.6z";
+  // Color table fitted to the video frames: grey 0 → 1 maps to these 17 colors.
+  const LUT = ["#050611","#050822","#050c3b","#030f55","#031a6e","#063f92","#0b70c0","#1aa6ea","#6ccbf6","#c6e0ee","#f0d4a8","#f4a95c","#ee5a2a","#e8456a","#ee5cb3","#f39ae0","#ffffff"];
+  // Stripe greys at offsets 0, .125 … 1 (fitted; a soft S-curve between #ccc and #323232).
+  const STOPS = ["#323232","#353535","#545454","#9f9f9f","#cccccc","#9f9f9f","#545454","#353535","#323232"];
+  const DEF = { word: "PRO", dur: 4.4, angle: -35, edge: 8, heat: 7.3, grain: 0.14 };
+  const PERIOD = 486;
+  const PAD = 12;
+  const FONT = "Geist, Helvetica Neue, Arial, sans-serif";
+  const STEPS = {
+    1: ["One plain path", "The letters are a single vector shape."],
+    2: ["Inner shadow", "Blur the shape, keep only its inner edge."],
+    3: ["A stripe that never stops", "A repeating gradient slides forever, overlaid on the grey."],
+    4: ["Grey becomes color", "A lookup table maps every shade of grey to a color."],
+    5: ["Blur and grain", "Soften everything, then add film noise."],
+  };
+
+  const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (id) => document.getElementById(id);
+  const plate = $("plate"), codeEl = $("code"), codebox = $("codebox");
+  let P = { ...DEF };
+  let view = "all";            // 1..5 or "all"
+  let paused = reduceMotion;
+  let buildTimer = null;
+  let shape = null;            // cached geometry for the current word
+
+  const num = (x, d = 2) => {
+    let s = String(+(+x).toFixed(d));
+    if (s.startsWith("0.")) s = s.slice(1);
+    else if (s.startsWith("-0.")) s = "-" + s.slice(2);
+    return s === "-0" ? "0" : s;
+  };
+  const chan = (hex, i) => parseInt(hex.slice(1 + 2 * i, 3 + 2 * i), 16) / 255;
+  const TV = [0, 1, 2].map((i) => LUT.map((h) => num(chan(h, i))).join(" "));
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  // Geometry of the shape: the fitted path for "PRO", live text for anything else.
+  let measureCtx = null, capRatio = null;
+  function geometry(word) {
+    if (word === "PRO" || !word.trim()) return { path: true, w: 337, h: 129 };
+    if (!measureCtx) measureCtx = document.createElement("canvas").getContext("2d");
+    const c = measureCtx;
+    if (!capRatio) {
+      c.font = `800 100px ${FONT}`;
+      const a = c.measureText("H").actualBoundingBoxAscent;
+      capRatio = a > 20 ? a / 100 : 0.72;
+    }
+    const fs = Math.round(124 / capRatio);
+    const ls = -Math.round(fs * 0.022);
+    c.font = `800 ${fs}px ${FONT}`;
+    try { c.letterSpacing = ls + "px"; } catch (e) {}
+    const m = c.measureText(word);
+    const left = m.actualBoundingBoxLeft || 0, right = m.actualBoundingBoxRight || m.width;
+    const asc = m.actualBoundingBoxAscent || fs * 0.72, desc = m.actualBoundingBoxDescent || 0;
+    return { path: false, fs, ls, x: +left.toFixed(1), y: +asc.toFixed(1), w: Math.ceil(left + right), h: Math.ceil(asc + desc) };
+  }
+
+  // The file, line by line. `from` is the step that adds or changes the line.
+  function model(st) {
+    const L = [];
+    const add = (from, ind, raw) => L.push({ from, ind, raw });
+    const g = shape;
+    const pad = g.path ? PAD : PAD + 8;
+    const vb = `${-pad} ${-pad} ${g.w + 2 * pad} ${g.h + 2 * pad}`;
+    const a = (P.angle * Math.PI) / 180;
+    const gx = Math.round(PERIOD * Math.cos(a)), gy = Math.round(PERIOD * Math.sin(a));
+    add(1, 0, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}">`);
+    if (st >= 2) add(2, 1, `<defs>`);
+    if (st >= 3) {
+      add(3, 2, `<linearGradient id="stripe" x2="${gx}" y2="${gy}"`);
+      add(3, 3, `gradientUnits="userSpaceOnUse" spreadMethod="repeat">`);
+      STOPS.forEach((c, i) => add(3, 3, i ? `<stop offset="${num(i / 8, 3)}" stop-color="${c}"/>` : `<stop stop-color="${c}"/>`));
+      add(3, 3, `<animateTransform attributeName="gradientTransform"`);
+      add(3, 4, `type="translate" to="${gx} ${gy}" dur="${num(P.dur, 1)}s"`);
+      add(3, 4, `repeatCount="indefinite"/>`);
+      add(3, 2, `</linearGradient>`);
+    }
+    if (st >= 2) {
+      add(2, 2, `<filter id="material" color-interpolation-filters="sRGB">`);
+      add(2, 3, `<feGaussianBlur in="SourceAlpha" stdDeviation="${num(P.edge, 1)}"/>`);
+      add(2, 3, `<feColorMatrix values="0 0 0 .616 0 0 0 0 .616 0 0 0 0 .616 0 0 0 0 0 1"/>`);
+      add(2, 3, `<feComposite in2="SourceAlpha" operator="in"/>`);
+      if (st >= 3) add(3, 3, `<feBlend in="SourceGraphic" mode="overlay"/>`);
+      add(2, 2, `</filter>`);
+    }
+    if (st >= 4) {
+      add(4, 2, `<filter id="color" color-interpolation-filters="sRGB"`);
+      add(4, 3, `x="-20%" y="-50%" width="140%" height="200%">`);
+      add(4, 3, `<feFlood flood-color="#fff" result="paper"/>`);
+      if (st >= 5) {
+        add(5, 3, `<feGaussianBlur in="SourceGraphic" stdDeviation="${num(P.heat, 1)}"/>`);
+        add(5, 3, `<feComposite in2="paper" result="heat"/>`);
+        add(5, 3, `<feTurbulence type="fractalNoise" baseFrequency="4"/>`);
+        add(5, 3, `<feColorMatrix values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1"/>`);
+        add(5, 3, `<feComposite in="heat" operator="arithmetic" k2="2" k3="${num(P.grain)}" k4="${num(-0.38 - P.grain / 2, 3)}"/>`);
+      } else {
+        add(4, 3, `<feComposite in="SourceGraphic" in2="paper"/>`);
+        add(4, 3, `<feComposite in2="paper" operator="arithmetic" k2="2" k4="-.38"/>`);
+      }
+      add(4, 3, `<feComponentTransfer>`);
+      ["R", "G", "B"].forEach((c, i) => add(4, 4, `<feFunc${c} type="table" tableValues="${TV[i]}"/>`));
+      add(4, 3, `</feComponentTransfer>`);
+      add(4, 2, `</filter>`);
+    }
+    if (st >= 2) add(2, 1, `</defs>`);
+    const gi = st >= 4 ? 2 : 1;
+    if (st >= 4) add(4, 1, `<g filter="url(#color)">`);
+    if (g.path) add(1, gi, `<path d="${PATH}"`);
+    else add(1, gi, `<text x="${g.x}" y="${g.y}" font-family="${FONT}" font-weight="800" font-size="${g.fs}" letter-spacing="${g.ls}"`);
+    if (st >= 2) add(2, gi + 1, `filter="url(#material)"`);
+    const close = g.path ? `/>` : `>${esc(P.word)}</text>`;
+    add(st >= 3 ? 3 : 1, gi + 1, `fill="${st >= 3 ? "url(#stripe)" : "#9d9d9d"}"${close}`);
+    if (st >= 4) add(4, 1, `</g>`);
+    add(1, 0, `</svg>`);
+    return L;
+  }
+  const rawOf = (L) => L.map((l) => "  ".repeat(l.ind) + l.raw).join("\n") + "\n";
+  const stepNum = () => (view === "all" ? 5 : view);
+
+  // Display: syntax colors, long values shortened, color swatches.
+  function pretty(raw) {
+    let s = raw.replace(/ d="[^"]{40,}"/, ` d="${PATH.slice(0, 27)}…"`).replace(/tableValues="[^"]*"/, 'tableValues="…"');
+    s = esc(s).replace(/&quot;/g, '"');
+    s = s.replace(/([\w:-]+)=("[^"]*")/g, (m, name, val) => {
+      let out = `<span class="a">${name}</span><span class="p">=</span><span class="s">${val}</span>`;
+      if (/^(stop-color|flood-color|fill)$/.test(name) && /^"#[0-9a-f]{3,6}"$/i.test(val)) out += `<span class="sw" style="background:${val.slice(1, -1)}"></span>`;
+      return out;
+    });
+    s = s.replace(/(&lt;\/?)([\w:]+)/g, '<span class="p">$1</span><span class="t">$2</span>');
+    s = s.replace(/(\/?&gt;)/g, '<span class="p">$1</span>');
+    if (/^&lt;feComponentTransfer|<span class="t">feComponentTransfer<\/span><span class="p">&gt;/.test(s) && !raw.startsWith("</")) {
+      s += `<span class="lut" style="background:linear-gradient(90deg,${LUT.join(",")})" title="Color table"></span>`;
+    }
+    return s;
+  }
+
+  function renderCode(L) {
+    const hl = view === "all" ? 0 : view;
+    codeEl.innerHTML = L.map((l, i) =>
+      `<span class="ln${l.from === hl ? " hl" : ""}"><span class="no">${i + 1}</span>${"  ".repeat(l.ind)}${pretty(l.raw)}</span>`
+    ).join("");
+    if (hl) {
+      const first = codeEl.querySelector(".ln.hl");
+      if (first) codebox.scrollTo({ top: Math.max(0, first.offsetTop - 56), behavior: reduceMotion ? "auto" : "smooth" });
+    }
+  }
+
+  function renderArt(L) {
+    const old = plate.querySelector("svg");
+    let t = 0.55;   // opens cool, with the P about to heat up like the end of the video
+    try { if (old && old.getCurrentTime) t = old.getCurrentTime(); } catch (e) {}
+    plate.innerHTML = rawOf(L);
+    const svg = plate.querySelector("svg");
+    if (!svg) return;
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", `${P.word || "PRO"} in thermal colors` + (stepNum() >= 3 ? ", animated" : ""));
+    try {
+      if (paused) svg.pauseAnimations();
+      svg.setCurrentTime(t);
+    } catch (e) {}
+  }
+
+  const kb = (n) => (n / 1024).toFixed(1) + " KB";
+  function render() {
+    shape = geometry(P.word);
+    const L = model(stepNum());
+    renderArt(L);
+    renderCode(L);
+    const fileBytes = new Blob([rawOf(view === "all" || view === 5 ? L : model(5))]).size;
+    const shownBytes = new Blob([rawOf(L)]).size;
+    $("size").textContent = kb(shownBytes) + (view === "all" || view === 5 ? "" : " at this step");
+    $("meta").textContent = `pro-thermal.svg · ${kb(fileBytes)}`;
+    if (view === "all") {
+      $("stepTitle").textContent = `That's the whole file. ${kb(fileBytes)}.`;
+      $("stepNote").textContent = "One path, one gradient, two filters. No script, no images.";
+    } else {
+      $("stepTitle").textContent = STEPS[view][0];
+      $("stepNote").textContent = STEPS[view][1];
+    }
+    document.querySelectorAll(".step").forEach((b) => b.setAttribute("aria-pressed", String(String(view) === b.dataset.step)));
+    $("wordOut").textContent = shape.path ? "traced" : "font";
+  }
+
+  function setView(v, fromUser) {
+    if (fromUser) stopBuild();
+    view = v === "all" ? "all" : +v;
+    render();
+  }
+
+  // Motion toggle
+  const icoPause = '<svg viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="3" height="8" rx=".6"/><rect x="6" y="1" width="3" height="8" rx=".6"/></svg>';
+  const icoPlay = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1.2v7.6a.5.5 0 0 0 .76.43l6.1-3.8a.5.5 0 0 0 0-.86L2.76.77A.5.5 0 0 0 2 1.2z"/></svg>';
+  function syncMotion() {
+    const b = $("motion");
+    b.innerHTML = paused ? icoPlay + "Resume" : icoPause + "Pause";
+    b.setAttribute("aria-pressed", String(paused));
+    b.setAttribute("aria-label", paused ? "Play the stripe animation" : "Pause the stripe animation");
+  }
+  $("motion").addEventListener("click", () => {
+    paused = !paused;
+    const svg = plate.querySelector("svg");
+    try { if (svg) paused ? svg.pauseAnimations() : svg.unpauseAnimations(); } catch (e) {}
+    syncMotion();
+  });
+
+  // Walk through the build like the video
+  function syncPlay() { $("play").innerHTML = buildTimer ? icoPause + "Stop" : icoPlay + "Play the build"; }
+  function stopBuild() { if (buildTimer) { clearTimeout(buildTimer); buildTimer = null; } syncPlay(); }
+  $("play").addEventListener("click", () => {
+    if (buildTimer) { stopBuild(); return; }
+    const seq = [1, 2, 3, 4, 5, "all"];
+    let i = 0;
+    const tick = () => {
+      setView(seq[i], false);
+      i += 1;
+      buildTimer = i < seq.length ? setTimeout(tick, 2600) : null;
+      syncPlay();
+    };
+    tick();
+  });
+
+  document.querySelectorAll(".step").forEach((b) => b.addEventListener("click", () => setView(b.dataset.step, true)));
+
+  // Tuning
+  const fmt = { dur: (v) => num(v, 1) + " s", angle: (v) => Math.round(v) + "°", edge: (v) => num(v, 1), heat: (v) => num(v, 1), grain: (v) => num(v, 2) };
+  function syncKnobs() {
+    for (const k of Object.keys(fmt)) { $(k).value = P[k]; $(k + "Out").textContent = fmt[k](P[k]); }
+    $("word").value = P.word;
+  }
+  let raf = 0;
+  const schedule = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(render); };
+  for (const k of Object.keys(fmt)) {
+    $(k).addEventListener("input", (e) => {
+      P[k] = +e.target.value;
+      $(k + "Out").textContent = fmt[k](P[k]);
+      if (view !== "all" && view < 5) { stopBuild(); view = "all"; }
+      schedule();
+    });
+  }
+  $("word").addEventListener("input", (e) => {
+    P.word = e.target.value.replace(/\s+/g, " ").slice(0, 12) || "";
+    if (!P.word.trim()) P.word = "PRO";
+    schedule();
+  });
+  $("word").addEventListener("blur", () => { if (!$("word").value.trim()) $("word").value = "PRO"; });
+  $("reset").addEventListener("click", () => { P = { ...DEF }; syncKnobs(); render(); });
+
+  // Copy
+  let toastTimer = 0;
+  function toast(msg) {
+    let t = document.querySelector(".toast");
+    if (!t) { t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 1800);
+  }
+  $("copy").addEventListener("click", () => {
+    const text = rawOf(model(stepNum()));
+    const fallback = () => {
+      const slot = $("fallbackSlot");
+      slot.innerHTML = '<p class="fallback-note">Copying is blocked here. The source is selected below; press Ctrl+C or ⌘C.</p><textarea class="fallback" id="fallbackText" readonly></textarea>';
+      const ta = $("fallbackText"); ta.value = text; ta.focus(); ta.select();
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => { $("fallbackSlot").innerHTML = ""; toast("Copied " + kb(new Blob([text]).size) + " of SVG"); }, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  syncKnobs(); syncMotion(); syncPlay(); render();
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load(`800 100px ${FONT}`).then(() => { capRatio = null; if (P.word !== "PRO") render(); }).catch(() => {});
+  }
+  window.__thermal = { model, rawOf, setView, get P() { return P; }, set P(v) { P = v; } };
+})();
+</script>
+
+</body></html>

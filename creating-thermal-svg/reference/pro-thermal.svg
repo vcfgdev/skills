@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 361 153">
+  <defs>
+    <linearGradient id="stripe" x2="398" y2="-279"
+      gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+      <stop stop-color="#323232"/>
+      <stop offset=".125" stop-color="#353535"/>
+      <stop offset=".25" stop-color="#545454"/>
+      <stop offset=".375" stop-color="#9f9f9f"/>
+      <stop offset=".5" stop-color="#cccccc"/>
+      <stop offset=".625" stop-color="#9f9f9f"/>
+      <stop offset=".75" stop-color="#545454"/>
+      <stop offset=".875" stop-color="#353535"/>
+      <stop offset="1" stop-color="#323232"/>
+      <animateTransform attributeName="gradientTransform"
+        type="translate" to="398 -279" dur="4.4s"
+        repeatCount="indefinite"/>
+    </linearGradient>
+    <filter id="material" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feColorMatrix values="0 0 0 .616 0 0 0 0 .616 0 0 0 0 .616 0 0 0 0 0 1"/>
+      <feComposite in2="SourceAlpha" operator="in"/>
+      <feBlend in="SourceGraphic" mode="overlay"/>
+    </filter>
+    <filter id="color" color-interpolation-filters="sRGB"
+      x="-20%" y="-50%" width="140%" height="200%">
+      <feFlood flood-color="#fff" result="paper"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="7.3"/>
+      <feComposite in2="paper" result="heat"/>
+      <feTurbulence type="fractalNoise" baseFrequency="4"/>
+      <feColorMatrix values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1"/>
+      <feComposite in="heat" operator="arithmetic" k2="2" k3=".14" k4="-.45"/>
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues=".02 .02 .02 .01 .01 .02 .04 .1 .42 .78 .94 .96 .93 .91 .93 .95 1"/>
+        <feFuncG type="table" tableValues=".02 .03 .05 .06 .1 .25 .44 .65 .8 .88 .83 .66 .35 .27 .36 .6 1"/>
+        <feFuncB type="table" tableValues=".07 .13 .23 .33 .43 .57 .75 .92 .96 .93 .66 .36 .16 .42 .7 .88 1"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <g filter="url(#color)">
+    <path d="M0 2.7h56.5q22.8 0 33.8 10.1q11.1 10.2 11.1 28.2q0 8.3-2.8 15.3q-2.7 7.2-8 13q-5.3 5.8-12.7 8.8q-8.3 3.1-18.5 3.1h-29v45.1h-30.4v-123.6zM30.4 27.5v28.8h19.8q10.7 0 15.5-3.4q4.7-3.3 4.7-10.6q0-7.4-4.7-11q-4.8-3.8-15.5-3.8h-19.8zM108.3 2.7h66.8q6.8 0 13.4 2.5q7.1 2.5 12.1 7.2q4.8 4.6 7.2 10.9q2.4 6 2.4 14.2q0 24.9-17.8 35.2q2.8 1 4.4 1.9q4.3 2.2 6.2 5.9q1.8 3.3 2.5 9.7q.5 4.7 .8 19.3q0 3.1 .9 4.7q.9 1.4 3.3 2.6l1.5 .8v8.7h-32.2l-.6-1.4q-2.1-4.7-2.8-8.9q-.6-4.1-.6-12.6v-.1l.3-11.5q0-4.8-2.3-6.8q-2.3-2.1-7.9-2.1h-27v43.4h-30.6v-123.6zM138.9 27.8v30h28.2q7.2 0 9.8-3.8q2.1-3.3 2.1-12.3q0-8.3-2.2-11q-2.6-2.9-9.7-2.9h-28.2zM275.6 0q13.4 0 24.8 4.6q11.2 4.5 19.6 12.8q8.2 8.3 12.6 20.3q4.4 12.7 4.4 27.3q0 14.3-4.4 26.8q-4.4 11.7-12.6 19.9q-8.4 8.3-19.6 12.7q-11.3 4.6-24.6 4.6q-13.5 0-24.8-4.6q-11.1-4.5-19.4-12.8q-8.1-8.3-12.4-20.2q-4.3-12.6-4.3-27.2q0-14.1 4.3-26.4q4.3-11.9 12.3-20.1q8.3-8.4 19.3-13q11.4-4.7 24.8-4.7zM275.8 24.6q-6.8 0-12.4 2.6q-5.5 2.5-9.4 7.6q-4.1 5.4-6.2 12.7q-2.3 7.6-2.3 16.7q0 9.4 2.3 17.1q2.1 7.5 6.1 12.8q4 5.1 9.5 7.5q5.6 2.5 12.4 2.5q6.7 0 12.3-2.5q5.5-2.4 9.5-7.5q4-5.2 6.2-12.5q2.3-7.6 2.3-16.7q0-9.4-2.2-17.2q-2.2-7.5-6.2-12.8q-3.9-5.3-9.4-7.7q-5.7-2.6-12.5-2.6z"
+      filter="url(#material)"
+      fill="url(#stripe)"/>
+  </g>
+</svg>
