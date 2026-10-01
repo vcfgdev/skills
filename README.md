@@ -10,7 +10,7 @@ Reusable agent skills for focused creative and engineering workflows.
 - [`creating-thermal-svg`](creating-thermal-svg/SKILL.md) — generates animated
   thermal lettering with a parameterized renderer and an offline HTML preview.
   The preview supports live edits, complete source, SVG downloads, and copying code.
-  See its [preview and GitHub Pages guide](creating-thermal-svg/README.md).
+  See its [usage guide](creating-thermal-svg/README.md).
 
 ## Install
 
