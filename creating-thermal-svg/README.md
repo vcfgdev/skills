@@ -19,7 +19,7 @@ python3 -m http.server 8000 --directory _site
 `_site/` is a generated, ignored directory. The builder refuses to overwrite an
 existing directory; remove only that disposable output before rebuilding, or
 pass a new output directory as the script's first argument. The thermal preview
-is at `thermal-svg/` within the output; its saved HTML also opens directly offline.
+is at `thermal-svg/` within the output; its generated HTML also opens directly offline.
 
 After deployment, the project-site paths are:
 

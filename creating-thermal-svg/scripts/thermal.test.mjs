@@ -118,6 +118,9 @@ test('offline HTML safely embeds config and the same executable engine', async (
   assert(!/data-stage=|id="(?:time|build|motion)"|pauseAnimations|requestAnimationFrame/.test(html), 'Final preview has no stage, scrub, pause or timeline updater');
   assert.doesNotMatch(html, /\.setCurrentTime\(/, 'Do not seek the SVG clock: it freezes the stripe after edits until the next repeat');
   assert.doesNotMatch(html, /saveConfig|loadConfig|configFile|Save parameters|Load parameters/, 'No parameter-file controls or handlers');
+  assert.doesNotMatch(html, /downloadHtml|Save preview HTML/, 'No HTML download control or handler');
+  assert.match(html, /id="copy">Copy<\/button>/);
+  assert.match(html, /id="downloadSvg">Download<\/button>/);
   assert.doesNotMatch(html, /geometryNote|id="error"|\$\('error'\)|querySelector\('#error'\)|Reset to original|Preview, complete source, clipboard/, 'Removed notes and inline errors stay absent');
   assert.match(html, /id="plate"[^>]*><\/div>\s*<button class="link" id="reset">Reset<\/button>/, 'Reset stays beside the preview, outside its image role');
   assert.doesNotMatch(html, /id="meta"|\$\('meta'\)|class="lede"|\/ Preview/, 'No header metadata, preview suffix or introductory text');

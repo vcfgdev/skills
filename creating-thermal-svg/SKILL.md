@@ -19,7 +19,7 @@ node scripts/build.mjs --out /absolute/workspace/thermal-custom --config /absolu
 ```
 
 Outputs:
-- `index.html`: self-contained offline preview of the complete, continuously looping effect, English parameter controls, code display, copy, and SVG/HTML downloads.
+- `index.html`: self-contained offline preview of the complete, continuously looping effect, English parameter controls, code display, copy, and SVG download.
 - `thermal.svg`: the same complete animated SVG shown in the preview.
 - `thermal.json`: normalized parameters; CLI flags override JSON values.
 
@@ -72,11 +72,11 @@ Custom path example:
 
 Preserve the baseline pipeline: repeating grayscale gradient → blurred alpha / gray matrix / alpha composite → overlay → white paper and heat blur → fractal noise and arithmetic exposure compensation → RGB lookup table. In particular, grain compensation is `k4 = −0.38 − grain / 2`, with `k2 = 2`. `reference/Thermal-PRO.html` is the user's unmodified source reference, not the offline template.
 
-The preview is for evaluating the final result, not teaching the build process. Always show the full effect with looping motion; do not add stage selectors, a playback timeline, or pause controls. Saved HTML retains parameters and restarts the loop. SVGs have fixed internal IDs; use separate `<img>` elements or iframe documents when embedding several, rather than duplicating them inline in one document.
+The preview is for evaluating the final result, not teaching the build process. Always show the full effect with looping motion; do not add stage selectors, a playback timeline, or pause controls. Keep the canvas height independent of text so controls do not shift during edits. Generated HTML embeds the supplied parameters and starts the loop on opening. SVGs have fixed internal IDs; use separate `<img>` elements or iframe documents when embedding several, rather than duplicating them inline in one document.
 
 ## Verify and deliver
 
 1. Run `node --test scripts/thermal.test.mjs` after changing the renderer or template.
 2. Render the generated HTML and exported SVG in a browser. Inspect the default and requested non-default result at a fixed animation time, plus narrow layout if the preview changed. Capture and inspect screenshots.
-3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, and saved HTML reopening. Check that the gradient's `gradientTransform.animVal` changes across frames, not only that `getCurrentTime()` advances: rebuilding or seeking the SVG animation can freeze the visible stripe until the next repeat. Preserve live SVG and animation nodes during edits. Check browser errors. Do not treat source inspection as rendered verification.
+3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, and generated HTML reopening. Check that the gradient's `gradientTransform.animVal` changes across frames, not only that `getCurrentTime()` advances: rebuilding or seeking the SVG animation can freeze the visible stripe until the next repeat. Preserve live SVG and animation nodes during edits. Check browser errors. Do not treat source inspection as rendered verification.
 4. Share the HTML and SVG, the chosen parameters and font caveat if applicable, and verification evidence. Generate video/audio only if requested; this skill does not export video.
