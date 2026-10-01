@@ -73,16 +73,19 @@ test('invalid parameters reject rather than silently changing the output', () =>
 
 test('offline HTML safely embeds config and the same executable engine', async () => {
   const config = {word: '</script><b>热感', dur: 3.7, angle: 71};
-  const html = await buildHtml(config, 4);
+  const html = await buildHtml(config);
   assert.equal((html.match(/<script\b/g) || []).length, 2);
   assert(!html.includes('__THERMAL_'));
   assert(!/<(?:script|link)[^>]+(?:src|href)=/.test(html));
   const embedded = JSON.parse(html.match(/type="application\/json">([\s\S]*?)<\/script>/)[1]);
   assert.equal(embedded.params.word, config.word);
-  assert.equal(embedded.stage, 4);
+  assert.deepEqual(Object.keys(embedded), ['params']);
+  assert(!/data-stage=|id="(?:time|build|motion)"|pauseAnimations|requestAnimationFrame/.test(html), 'Final preview has no stage, scrub, pause or timeline updater');
   const engine = html.match(/<script type="module" id="thermal-app">([\s\S]*?)\nconst \$ =/)[1];
-  const source = runInNewContext(engine + '\nbuildSvg(config, 4).source', {config});
-  assert.equal(source, buildSvg(config, 4).source);
+  const source = runInNewContext(engine + '\nbuildSvg(config).source', {config});
+  assert.equal(source, buildSvg(config).source);
+  assert.match(source, /<feTurbulence/);
+  assert.match(source, /repeatCount="indefinite"/);
 });
 
 test('CLI round-trips parameters and refuses existing outputs without altering them', async () => {
@@ -91,18 +94,22 @@ test('CLI round-trips parameters and refuses existing outputs without altering t
   try {
     const config = join(root, 'params.json'), out = join(root, 'result');
     await writeFile(config, JSON.stringify({word: '热感', angle: 71, grain: .32}));
-    const args = [cli, '--out', out, '--config', config, '--angle', '-28', '--stage', '3'];
+    const args = [cli, '--out', out, '--config', config, '--angle', '-28'];
     const first = spawnSync(process.execPath, args, {encoding: 'utf8'});
     assert.equal(first.status, 0, first.stderr);
     const svg = await readFile(join(out, 'thermal.svg'), 'utf8');
-    assert.equal(svg, buildSvg({word: '热感', angle: -28, grain: .32}, 3).source);
+    assert.equal(svg, buildSvg({word: '热感', angle: -28, grain: .32}).source);
     const saved = JSON.parse(await readFile(join(out, 'thermal.json'), 'utf8'));
-    assert.equal(buildSvg(saved, 3).source, svg);
+    assert.equal(buildSvg(saved).source, svg);
     const before = await Promise.all(['index.html', 'thermal.svg', 'thermal.json'].map(n => readFile(join(out, n), 'utf8')));
     const second = spawnSync(process.execPath, args, {encoding: 'utf8'});
     assert.equal(second.status, 1);
     assert.match(second.stderr, /Refusing to overwrite/);
     assert.deepEqual(await Promise.all(['index.html', 'thermal.svg', 'thermal.json'].map(n => readFile(join(out, n), 'utf8'))), before);
+    const partial = spawnSync(process.execPath, [cli, '--out', join(root, 'partial'), '--stage', '3'], {encoding: 'utf8'});
+    assert.equal(partial.status, 1);
+    assert.match(partial.stderr, /Unknown option: --stage/);
+    assert(!(await readdir(root)).includes('partial'));
     await writeFile(config, 'null');
     assert.equal(spawnSync(process.execPath, [cli, '--out', join(root, 'invalid'), '--config', config]).status, 1);
     assert(!(await readdir(root)).includes('invalid'));

@@ -19,8 +19,8 @@ node scripts/build.mjs --out /absolute/workspace/thermal-custom --config /absolu
 ```
 
 Outputs:
-- `index.html`: self-contained offline renderer, English controls, five build stages, pause/scrub, code display, copy, SVG/HTML downloads, JSON import/export.
-- `thermal.svg`: complete animated SVG for the selected stage (default 5).
+- `index.html`: self-contained offline preview of the complete, continuously looping effect, English parameter controls, code display, copy, SVG/HTML downloads, JSON import/export.
+- `thermal.svg`: the same complete animated SVG shown in the preview.
 - `thermal.json`: normalized parameters; CLI flags override JSON values.
 
 Open the HTML in a browser. In an Amp orb, load the browser skill for verification and serve only the output directory with a supervised service and portal. Share the portal and downloadable HTML, not a loopback URL.
@@ -43,7 +43,7 @@ Open the HTML in a browser. In an Amp orb, load the browser skill for verificati
 | `bounds` | `[0,0,337,129]` | Custom path `[x,y,width,height]`, positive width/height |
 | `fillRule` | `nonzero` | `nonzero` or `evenodd` |
 
-Use JSON for arrays and paths. `--stage 1` through `--stage 5` exports a complete intermediate SVG rather than a disconnected code fragment. Blur and period are in user units, so retune them for unusually large or small custom outlines. The palette's last color also affects the paper background.
+Use JSON for arrays and paths. Blur and period are in user units, so retune them for unusually large or small custom outlines. The palette's last color also affects the paper background.
 
 **Geometry matters:** `PRO` uses the user's exact traced outline. Other words use SVG `<text>` with system sans-serif fonts; they are not outlined and can look different on another device. Disclose this. For a specific typeface or portable lettering, obtain a licensed font and convert the requested text to a compound path using an available font-outline tool, or accept the user's existing paths. Supply the actual bounds. Never approximate traced lettering with a vaguely similar font while claiming an exact match.
 
@@ -68,11 +68,11 @@ Custom path example:
 
 Preserve the baseline pipeline: repeating grayscale gradient → blurred alpha / gray matrix / alpha composite → overlay → white paper and heat blur → fractal noise and arithmetic exposure compensation → RGB lookup table. In particular, grain compensation is `k4 = −0.38 − grain / 2`, with `k2 = 2`. `reference/Thermal-PRO.html` is the user's unmodified source reference, not the offline template.
 
-Preview pause and scrub do not freeze the exported SVG: it remains animated. Saved HTML retains parameters and selected stage, but restarts the animation. SVGs have fixed internal IDs; use separate `<img>` elements or iframe documents when embedding several, rather than duplicating them inline in one document.
+The preview is for evaluating the final result, not teaching the build process. Always show the full effect with looping motion; do not add stage selectors, a playback timeline, or pause controls. Saved HTML retains parameters and restarts the loop. SVGs have fixed internal IDs; use separate `<img>` elements or iframe documents when embedding several, rather than duplicating them inline in one document.
 
 ## Verify and deliver
 
 1. Run `node --test scripts/thermal.test.mjs` after changing the renderer or template.
 2. Render the generated HTML and exported SVG in a browser. Inspect the default and requested non-default result at a fixed animation time, plus narrow layout if the preview changed. Capture and inspect screenshots.
-3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Exercise stage selection, edits, reset, parameter reload, and saved HTML reopening when changing preview behavior. Check browser errors. Do not treat source inspection as rendered verification.
+3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, parameter reload, and saved HTML reopening. Check browser errors. Do not treat source inspection as rendered verification.
 4. Share the HTML and SVG, the chosen parameters and font caveat if applicable, and verification evidence. Generate video/audio only if requested; this skill does not export video.
