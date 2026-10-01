@@ -78,5 +78,5 @@ The preview is for evaluating the final result, not teaching the build process. 
 
 1. Run `node --test scripts/thermal.test.mjs` after changing the renderer or template.
 2. Render the generated HTML and exported SVG in a browser. Inspect the default and requested non-default result at a fixed animation time, plus narrow layout if the preview changed. Capture and inspect screenshots.
-3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, and saved HTML reopening. Check browser errors. Do not treat source inspection as rendered verification.
+3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, and saved HTML reopening. Check that the gradient's `gradientTransform.animVal` changes across frames, not only that `getCurrentTime()` advances: rebuilding or seeking the SVG animation can freeze the visible stripe until the next repeat. Preserve live SVG and animation nodes during edits. Check browser errors. Do not treat source inspection as rendered verification.
 4. Share the HTML and SVG, the chosen parameters and font caveat if applicable, and verification evidence. Generate video/audio only if requested; this skill does not export video.

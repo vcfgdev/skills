@@ -69,12 +69,27 @@ function syncForm() {
   }
   $('palette').value = params.palette.join(' '); $('seed').value = params.seed;
 }
-function render(keepTime = true) {
-  const time = keepTime ? $('plate').querySelector('svg')?.getCurrentTime() ?? .55 : .55;
+function syncSvg(node, next) {
+  if (node.isEqualNode(next)) return;
+  if (node.nodeName !== next.nodeName) { node.replaceWith(next); return; }
+  if (node.nodeType === Node.TEXT_NODE) { node.data = next.data; return; }
+  for (const {name} of [...node.attributes]) if (!next.hasAttribute(name)) node.removeAttribute(name);
+  for (const {name, value} of next.attributes) if (node.getAttribute(name) !== value) node.setAttribute(name, value);
+  const children = [...node.childNodes], nextChildren = [...next.childNodes];
+  for (let i = 0; i < Math.max(children.length, nextChildren.length); i++) {
+    if (!nextChildren[i]) children[i].remove();
+    else if (!children[i]) node.append(nextChildren[i]);
+    else syncSvg(children[i], nextChildren[i]);
+  }
+}
+function render() {
   current = buildSvg(params);
-  $('plate').innerHTML = current.source;
+  const next = new DOMParser().parseFromString(current.source, 'image/svg+xml').documentElement;
+  const svg = $('plate').querySelector('svg');
+  // Preserve the root and animation nodes; rebuilding them can freeze SMIL until the next repeat.
+  if (svg) syncSvg(svg, next);
+  else $('plate').replaceChildren(next);
   $('plate').setAttribute('aria-label', `${params.word} · ${current.outlined ? 'Outlined path' : 'Font-based text'} · Full effect`);
-  $('plate').querySelector('svg').setCurrentTime(time);
   $('code').innerHTML = current.lines.map((line, i) => `<span class="line" data-line="${i + 1}">${pretty(line.text)}\n</span>`).join('');
   const bytes = new TextEncoder().encode(current.source).length;
   $('bytes').textContent = `${bytes.toLocaleString()} B`;
@@ -91,7 +106,7 @@ function update(changes) {
 for (const key of numericKeys) $(key).addEventListener('input', e => update({[key]: Number(e.target.value)}));
 $('word').addEventListener('input', e => update({word: e.target.value}));
 $('applyPalette').addEventListener('click', () => update({palette: $('palette').value.trim().split(/[\s,]+/), seed: Number($('seed').value)}));
-$('reset').addEventListener('click', () => {params = normalize(); $('toast').hidden = true; syncForm(); render(false);});
+$('reset').addEventListener('click', () => {params = normalize(); $('toast').hidden = true; syncForm(); render();});
 $('copy').addEventListener('click', async () => {
   try {await navigator.clipboard.writeText(current.source); $('fallback').hidden = true; notify('Complete SVG copied');}
   catch { $('fallback').hidden = false; $('fallback').value = current.source; $('fallback').focus(); $('fallback').select(); notify('Press Ctrl+C / ⌘C to copy the selected source'); }
@@ -107,7 +122,7 @@ $('downloadHtml').addEventListener('click', () => {
   clone.querySelector('#toast').hidden = true; clone.querySelector('#fallback').hidden = true;
   download('thermal-preview.html', '<!doctype html>\n' + clone.outerHTML, 'text/html');
 });
-syncForm(); render(false);
+syncForm(); render();
 </script>
 </body>
 </html>

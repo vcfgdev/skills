@@ -116,6 +116,7 @@ test('offline HTML safely embeds config and the same executable engine', async (
   assert.equal(embedded.params.word, config.word);
   assert.deepEqual(Object.keys(embedded), ['params']);
   assert(!/data-stage=|id="(?:time|build|motion)"|pauseAnimations|requestAnimationFrame/.test(html), 'Final preview has no stage, scrub, pause or timeline updater');
+  assert.doesNotMatch(html, /\.setCurrentTime\(/, 'Do not seek the SVG clock: it freezes the stripe after edits until the next repeat');
   assert.doesNotMatch(html, /saveConfig|loadConfig|configFile|Save parameters|Load parameters/, 'No parameter-file controls or handlers');
   assert.doesNotMatch(html, /geometryNote|id="error"|\$\('error'\)|querySelector\('#error'\)|Reset to original|Preview, complete source, clipboard/, 'Removed notes and inline errors stay absent');
   assert.match(html, /id="plate"[^>]*><\/div>\s*<button class="link" id="reset">Reset<\/button>/, 'Reset stays beside the preview, outside its image role');
