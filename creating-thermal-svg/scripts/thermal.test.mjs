@@ -53,11 +53,46 @@ test('custom compound path preserves non-origin bounds and fill rule', () => {
   assert(!result.source.includes('<text'));
 });
 
+test('custom Latin lettering uses portable, naturally proportioned Archivo Black outlines', () => {
+  const {source, outlined} = buildSvg({word: 'DUO'});
+  assert.equal(outlined, true);
+  assert.equal((source.match(/<path /g) || []).length, 1, 'One shape shares one continuous stripe');
+  assert(!/<text|font-family|textLength|lengthAdjust|<path[^>]*transform=/.test(source));
+  // Font ink widths: D=659, U=685, O=743, scaled by 129/688;
+  // add two PRO-like 6.9-unit gaps and 24 padding. Curve sampling error is <.05 here.
+  const box = source.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number);
+  assert.deepEqual([box[0], box[1], box[3]], [1.875, -14.25, 157.5]);
+  assert(Math.abs(box[2] - ((659 + 685 + 743) * 129 / 688 + 13.8 + 24)) < .05);
+  assert.equal(source.match(/<defs>[\s\S]*<\/defs>/)[0], buildSvg().source.match(/<defs>[\s\S]*<\/defs>/)[0]);
+  const width = word => Number(buildSvg({word}).source.match(/viewBox="[^ ]+ [^ ]+ ([^ ]+)/)[1]);
+  assert(width('WWW') > width('III') * 2, 'Do not estimate width by character count or stretch glyphs');
+  // The second H moves by its ink width plus the PRO-like gap: 128.437 + 6.9.
+  assert.match(buildSvg({word: 'HH'}, 1).source, /M236\.212 129V80\.062H190\.649V129H149\.212V0/);
+});
+
+test('angled letters join at facing contours, while explicit spaces stay open', () => {
+  const width = word => Number(buildSvg({word}).source.match(/viewBox="[^ ]+ [^ ]+ ([^ ]+)/)[1]);
+  // A's nearest facing edge is at T's head, y=33. Bounding boxes leave excess spacing.
+  const aRightAt33 = 97.125 + (144.188 - 97.125) * 33 / 129;
+  const tOffset = aRightAt33 - 4.312 + 6.9;
+  assert(Math.abs(width('AT') - (tOffset + 130.312 - 1.875 + 24)) < .01);
+  assert(width('D UO') > width('DUO') + 60, 'A typed space separates the words');
+  assert(Math.abs(width('D  UO') - width('D UO') - 333 * 129 / 688) < .002, 'Repeated spaces retain their advance');
+});
+
+test('outlined text bounds include accents, descenders, negative bearings and spaces', () => {
+  // j has left bearing -41 and descender -210; Á reaches 885 font units.
+  assert.match(buildSvg({word: 'jÁ'}).source, /viewBox="-19\.688 -48\.938 230\.775 229\.313"/);
+  assert.equal(buildSvg({word: 'cafe\u0301'}).source, buildSvg({word: 'café'}).source);
+  assert.notEqual(buildSvg({word: 'D UO'}).source, buildSvg({word: 'DUO'}).source);
+  assert.equal(buildSvg({word: 'DUO热'}).outlined, false, 'Unsupported characters must not disappear');
+});
+
 test('text is escaped, Unicode is counted, and text mode is identified', () => {
   const result = buildSvg({word: '<热&"感\'>'});
   assert.equal(result.outlined, false);
   assert.match(result.source, /&lt;热&amp;&quot;感&apos;&gt;<\/text>/);
-  assert.match(result.source, /font-family="Arial, Noto Sans CJK SC, sans-serif"/);
+  assert.match(result.source, /font-family="Arial Black, Noto Sans CJK SC, sans-serif"/);
   assert.doesNotThrow(() => normalize({word: '😀'.repeat(32)}));
   assert.throws(() => normalize({word: '😀'.repeat(33)}));
 });
@@ -81,11 +116,19 @@ test('offline HTML safely embeds config and the same executable engine', async (
   assert.equal(embedded.params.word, config.word);
   assert.deepEqual(Object.keys(embedded), ['params']);
   assert(!/data-stage=|id="(?:time|build|motion)"|pauseAnimations|requestAnimationFrame/.test(html), 'Final preview has no stage, scrub, pause or timeline updater');
+  assert.doesNotMatch(html, /saveConfig|loadConfig|configFile|Save parameters|Load parameters/, 'No parameter-file controls or handlers');
+  assert.doesNotMatch(html, /geometryNote|id="error"|\$\('error'\)|querySelector\('#error'\)|Reset to original|Preview, complete source, clipboard/, 'Removed notes and inline errors stay absent');
+  assert.match(html, /id="plate"[^>]*><\/div>\s*<button class="link" id="reset">Reset<\/button>/, 'Reset stays beside the preview, outside its image role');
+  assert.doesNotMatch(html, /id="meta"|\$\('meta'\)|class="lede"|\/ Preview/, 'No header metadata, preview suffix or introductory text');
+  assert.match(html, /<h1>Thermal SVG<\/h1><a href="https:\/\/github.com\/vcfgdev\/skills"[^>]*>GitHub<\/a>/, 'Header links to the skills repository');
   const engine = html.match(/<script type="module" id="thermal-app">([\s\S]*?)\nconst \$ =/)[1];
   const source = runInNewContext(engine + '\nbuildSvg(config).source', {config});
   assert.equal(source, buildSvg(config).source);
   assert.match(source, /<feTurbulence/);
   assert.match(source, /repeatCount="indefinite"/);
+  assert(!/^import /m.test(engine), 'The font data is bundled for offline use');
+  assert.match(engine, /SIL OPEN FONT LICENSE/);
+  assert.equal(runInNewContext(engine + '\nbuildSvg({word: "DUO"}).source'), buildSvg({word: 'DUO'}).source);
 });
 
 test('CLI round-trips parameters and refuses existing outputs without altering them', async () => {

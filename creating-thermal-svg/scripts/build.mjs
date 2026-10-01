@@ -8,9 +8,11 @@ export async function buildHtml(params = {}) {
   const result = buildSvg(params);
   const template = await readFile(new URL('../assets/preview.html', import.meta.url), 'utf8');
   const engine = await readFile(new URL('../assets/thermal.mjs', import.meta.url), 'utf8');
+  const font = await readFile(new URL('../assets/archivo-black.mjs', import.meta.url), 'utf8');
+  const bundled = font + '\n' + engine.replace(/^import \{ARCHIVO_BLACK\} from '\.\/archivo-black\.mjs';\n/, '');
   const config = JSON.stringify({params: result.params}).replace(/</g, '\\u003c');
   return template.replace('__THERMAL_CONFIG__', () => config)
-    .replace('/*__THERMAL_ENGINE__*/', () => engine.replace(/^export /gm, ''));
+    .replace('/*__THERMAL_ENGINE__*/', () => bundled.replace(/^export /gm, ''));
 }
 
 async function main() {

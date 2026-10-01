@@ -19,7 +19,7 @@ node scripts/build.mjs --out /absolute/workspace/thermal-custom --config /absolu
 ```
 
 Outputs:
-- `index.html`: self-contained offline preview of the complete, continuously looping effect, English parameter controls, code display, copy, SVG/HTML downloads, JSON import/export.
+- `index.html`: self-contained offline preview of the complete, continuously looping effect, English parameter controls, code display, copy, and SVG/HTML downloads.
 - `thermal.svg`: the same complete animated SVG shown in the preview.
 - `thermal.json`: normalized parameters; CLI flags override JSON values.
 
@@ -45,9 +45,13 @@ Open the HTML in a browser. In an Amp orb, load the browser skill for verificati
 
 Use JSON for arrays and paths. Blur and period are in user units, so retune them for unusually large or small custom outlines. The palette's last color also affects the paper background.
 
-**Geometry matters:** `PRO` uses the user's exact traced outline. Other words use SVG `<text>` with system sans-serif fonts; they are not outlined and can look different on another device. Disclose this. For a specific typeface or portable lettering, obtain a licensed font and convert the requested text to a compound path using an available font-outline tool, or accept the user's existing paths. Supply the actual bounds. Never approximate traced lettering with a vaguely similar font while claiming an exact match.
+**Geometry matters:** `PRO` uses the user's exact traced outline. Custom Latin text defaults to **Archivo Black**, a broad, heavy sans-serif with bundled outlines. The renderer combines the glyphs into one SVG path at a 129-unit cap height. Adjacent letters are fitted by their facing contours with a 6.9-unit gap matching the traced PRO's P–R spacing: the thermal edges join while the blue cores stay distinct. Do not stretch or physically merge the letter shapes. Explicit spaces retain their font advance between words. Preview and exports need no installed fonts or network. This is a compatible visual weight, not a claim that Archivo Black is the font of the traced PRO.
 
-The original bright stripe can wash out thin strokes during the loop. For thinner text, tune `edge` and `heat` down and lower the peak grayscale `stops` if needed. For example, `edge: 4`, `heat: 3` and stops `#323232 #353535 #545454 #7f7f7f #999999 #7f7f7f #545454 #353535 #323232` keep HEAT readable. Do not change the PRO defaults to accommodate a different shape.
+If a word contains characters outside the bundled font, the whole word falls back to live SVG `<text>` for browser shaping. The preview marks this mode as `Text`; it is not guaranteed portable. For a different typeface or unsupported script with identical lettering across devices, obtain licensed outlines and supply `path` and the actual `bounds`. Do not silently omit unsupported characters.
+
+The original bright stripe can still fade portions of the lettering into white during the loop. A heavier font reduces the thin-stroke problem; it does not remove that animation phase. For thin custom paths or fallback fonts, tune `edge` and `heat` down and lower the peak grayscale `stops` if needed. Do not change the PRO defaults to accommodate a different shape.
+
+`assets/archivo-black.mjs` contains generated glyph data and its SIL Open Font License. `scripts/prepare-font.py` documents the source and checksum-pinned regeneration command; fontTools is needed only to regenerate that asset, not to build or use the preview. Keep the font's license when redistributing the skill or HTML.
 
 Custom path example:
 
@@ -64,7 +68,7 @@ Custom path example:
 
 ## Preserve the rendering contract
 
-`assets/thermal.mjs` owns validation, geometry, filters, and SVG serialization. `scripts/build.mjs` embeds that exact engine into `assets/preview.html`. The preview, visible code, clipboard, and downloaded SVG all consume the same generated source. Do not replace the code display with simplified snippets, omit the path or lookup table, or render a separate hidden approximation.
+`assets/thermal.mjs` owns validation, geometry, filters, and SVG serialization. `scripts/build.mjs` embeds that exact engine and the bundled glyph data into `assets/preview.html`. The preview, visible code, clipboard, and downloaded SVG all consume the same generated source. Do not replace the code display with simplified snippets, omit the path or lookup table, or render a separate hidden approximation.
 
 Preserve the baseline pipeline: repeating grayscale gradient → blurred alpha / gray matrix / alpha composite → overlay → white paper and heat blur → fractal noise and arithmetic exposure compensation → RGB lookup table. In particular, grain compensation is `k4 = −0.38 − grain / 2`, with `k2 = 2`. `reference/Thermal-PRO.html` is the user's unmodified source reference, not the offline template.
 
@@ -74,5 +78,5 @@ The preview is for evaluating the final result, not teaching the build process. 
 
 1. Run `node --test scripts/thermal.test.mjs` after changing the renderer or template.
 2. Render the generated HTML and exported SVG in a browser. Inspect the default and requested non-default result at a fixed animation time, plus narrow layout if the preview changed. Capture and inspect screenshots.
-3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, parameter reload, and saved HTML reopening. Check browser errors. Do not treat source inspection as rendered verification.
+3. Confirm the displayed source equals the copied/downloaded SVG and the parsed preview DOM. Verify the full effect keeps looping after edits, reset, and saved HTML reopening. Check browser errors. Do not treat source inspection as rendered verification.
 4. Share the HTML and SVG, the chosen parameters and font caveat if applicable, and verification evidence. Generate video/audio only if requested; this skill does not export video.

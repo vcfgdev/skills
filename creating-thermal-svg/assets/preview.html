@@ -7,18 +7,20 @@
 <style id="thermal-style">
 :root{color-scheme:light;--bg:#fff;--ink:#10131f;--muted:#646b7c;--rule:#e5e7ed;--panel:#fbfbfc;--chip:#f1f2f6;--hl:#e7f6ec;--str:#bd4d2b;--focus:#0b70c0;font-family:Arial,"Noto Sans CJK SC","Microsoft YaHei",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}:focus-visible{outline:2px solid var(--focus);outline-offset:3px}[hidden]{display:none!important}
-.wrap{max-width:960px;margin:0 auto;padding:28px 24px 60px}.top{display:flex;justify-content:space-between;align-items:baseline;gap:16px}.top h1{margin:0;font-size:16px;letter-spacing:-.02em}.meta{font:12px ui-monospace,monospace;color:var(--muted)}.lede{color:var(--muted);margin:8px 0 12px;font-size:13px}.plate{margin:18px 0 22px;padding:12px 10px;background:#fff;border-radius:16px;min-height:180px;display:grid;place-items:center}.plate svg{display:block;width:100%;height:auto;max-height:390px}.steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.step,.button{border:1px solid var(--rule);background:var(--bg);border-radius:999px;min-height:34px;padding:5px 13px;font-size:12px;white-space:nowrap}.step{color:var(--muted)}.step:hover,.button:hover{background:var(--chip)}.step[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.step span{font:11px ui-monospace,monospace;margin-right:5px;opacity:.6}.actions{display:flex;gap:8px;margin-left:auto}.link{border:0;background:transparent;color:var(--muted);padding:6px 0;min-height:34px;font-size:12px}.link:hover{text-decoration:underline;text-underline-offset:4px}
-.caption{margin:26px 0 24px}.caption h2{font-size:clamp(25px,4vw,38px);font-weight:500;line-height:1.3;letter-spacing:-.04em;margin:0}.caption p{margin:9px 0 0;color:var(--muted);font-size:14px}.tuning{border-top:1px solid var(--rule);padding-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px 38px}.knob{display:grid;grid-template-columns:90px minmax(0,1fr) 58px;align-items:center;gap:10px}.knob label{font-size:12px}.knob output{font:12px ui-monospace,monospace;text-align:right;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--ink);margin:0}input[type=text],input[type=number],textarea{width:100%;border:1px solid var(--rule);border-radius:7px;background:var(--bg);padding:7px 10px;min-width:0}input[type=text]{font-weight:600}.settings-foot{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin-top:12px}.hint{color:var(--muted);font-size:12px;margin:0}.error{color:#af2828;font-size:13px;min-height:1.6em;margin:6px 0}.advanced{margin-top:16px;border-top:1px solid var(--rule);padding-top:12px}.advanced summary{cursor:pointer;color:var(--muted);font-size:12px}.advanced label{display:block;font-size:12px;margin:16px 0 7px}.advanced textarea{font:12px/1.6 ui-monospace,monospace;min-height:70px}.palette{display:flex;height:13px;overflow:hidden;border-radius:4px;margin-top:12px}.palette i{flex:1}.advanced-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}.advanced-controls input[type=number]{width:90px}
-.code{border:1px solid var(--rule);border-radius:14px;background:var(--panel);overflow:hidden;margin-top:28px}.codebar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rule);flex-wrap:wrap}.codebar strong{font:12px ui-monospace,monospace;font-weight:500}.codebar .export{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.codebar button{min-height:30px;font-size:11px;padding:3px 11px}.codebox{overflow:auto;max-height:370px}.codebox pre{margin:0;padding:14px 0;font:12px/1.8 ui-monospace,"SFMono-Regular",Consolas,monospace;min-width:max-content}.line{display:block;white-space:pre;padding:0 24px 0 52px;position:relative}.line::before{content:attr(data-line);position:sticky;left:0;display:inline-block;width:30px;margin-left:-42px;margin-right:12px;color:#9da4b3;text-align:right;user-select:none;background:var(--panel)}.line.hl,.line.hl::before{background:var(--hl)}.value{color:var(--str)}.fallback{width:100%;height:140px;border:0;border-bottom:1px solid var(--rule);border-radius:0;font:12px/1.5 monospace}.footnote{font-size:12px;color:var(--muted);margin:12px 0 0}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:12px;z-index:2}
-@media(prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#0b0d16;--ink:#e8eaf2;--muted:#9ba1b5;--rule:#282d40;--panel:#101321;--chip:#181c2c;--hl:#133221;--str:#ff9466;--focus:#6ccbf6}.error{color:#ff9999}}
-@media(max-width:650px){.wrap{padding:20px 16px 40px}.top{align-items:start}.meta{font-size:10px}.plate{padding:8px 0;margin:20px 0;min-height:120px}.step{padding:5px 10px}.actions{margin-left:0;width:100%;gap:20px}.tuning{grid-template-columns:1fr;gap:14px}.caption{margin-top:20px}.codebar .export{width:100%;margin-left:0}.codebox pre{font-size:11px}.line{padding-left:44px}.caption p{font-size:12px}}
+.wrap{max-width:960px;margin:0 auto;padding:28px 24px 60px}.top{display:flex;align-items:baseline;gap:12px}.top h1{margin:0;font-size:16px;letter-spacing:-.02em}.top a{font-size:12px;color:var(--muted);text-underline-offset:3px}.meta{font:12px ui-monospace,monospace;color:var(--muted)}.preview{margin:18px 0 22px}.preview>.link{display:block;margin-left:auto}.plate{padding:12px 10px;background:#fff;border-radius:16px;min-height:180px;display:grid;place-items:center}.plate svg{display:block;width:100%;height:auto;max-height:390px}.steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.step,.button{border:1px solid var(--rule);background:var(--bg);border-radius:999px;min-height:34px;padding:5px 13px;font-size:12px;white-space:nowrap}.step{color:var(--muted)}.step:hover,.button:hover{background:var(--chip)}.step[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.step span{font:11px ui-monospace,monospace;margin-right:5px;opacity:.6}.actions{display:flex;gap:8px;margin-left:auto}.link{border:0;background:transparent;color:var(--muted);padding:6px 0;min-height:34px;font-size:12px}.link:hover{text-decoration:underline;text-underline-offset:4px}
+.caption{margin:26px 0 24px}.caption h2{font-size:clamp(25px,4vw,38px);font-weight:500;line-height:1.3;letter-spacing:-.04em;margin:0}.caption p{margin:9px 0 0;color:var(--muted);font-size:14px}.tuning{border-top:1px solid var(--rule);padding-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px 38px}.knob{display:grid;grid-template-columns:90px minmax(0,1fr) 58px;align-items:center;gap:10px}.knob label{font-size:12px}.knob output{font:12px ui-monospace,monospace;text-align:right;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--ink);margin:0}input[type=text],input[type=number],textarea{width:100%;border:1px solid var(--rule);border-radius:7px;background:var(--bg);padding:7px 10px;min-width:0}input[type=text]{font-weight:600}.advanced{margin-top:16px;border-top:1px solid var(--rule);padding-top:12px}.advanced summary{cursor:pointer;color:var(--muted);font-size:12px}.advanced label{display:block;font-size:12px;margin:16px 0 7px}.advanced textarea{font:12px/1.6 ui-monospace,monospace;min-height:70px}.palette{display:flex;height:13px;overflow:hidden;border-radius:4px;margin-top:12px}.palette i{flex:1}.advanced-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}.advanced-controls input[type=number]{width:90px}
+.code{border:1px solid var(--rule);border-radius:14px;background:var(--panel);overflow:hidden;margin-top:28px}.codebar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--rule);flex-wrap:wrap}.codebar strong{font:12px ui-monospace,monospace;font-weight:500}.codebar .export{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.codebar button{min-height:30px;font-size:11px;padding:3px 11px}.codebox{overflow:auto;max-height:370px}.codebox pre{margin:0;padding:14px 0;font:12px/1.8 ui-monospace,"SFMono-Regular",Consolas,monospace;min-width:max-content}.line{display:block;white-space:pre;padding:0 24px 0 52px;position:relative}.line::before{content:attr(data-line);position:sticky;left:0;display:inline-block;width:30px;margin-left:-42px;margin-right:12px;color:#9da4b3;text-align:right;user-select:none;background:var(--panel)}.line.hl,.line.hl::before{background:var(--hl)}.value{color:var(--str)}.fallback{width:100%;height:140px;border:0;border-bottom:1px solid var(--rule);border-radius:0;font:12px/1.5 monospace}.footnote{font-size:12px;color:var(--muted);margin:12px 0 0}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:12px;z-index:2;pointer-events:none}
+@media(prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#0b0d16;--ink:#e8eaf2;--muted:#9ba1b5;--rule:#282d40;--panel:#101321;--chip:#181c2c;--hl:#133221;--str:#ff9466;--focus:#6ccbf6}}
+@media(max-width:650px){.wrap{padding:20px 16px 40px}.top{align-items:start}.meta{font-size:10px}.preview{margin:20px 0}.plate{padding:8px 0;min-height:120px}.step{padding:5px 10px}.actions{margin-left:0;width:100%;gap:20px}.tuning{grid-template-columns:1fr;gap:14px}.caption{margin-top:20px}.codebar .export{width:100%;margin-left:0}.codebox pre{font-size:11px}.line{padding-left:44px}.caption p{font-size:12px}}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <header class="top"><h1>Thermal SVG <span style="font-weight:400;color:var(--muted)">/ Preview</span></h1><span class="meta" id="meta"></span></header>
-  <p class="lede">Tune the thermal effect, then export the exact SVG you see. Everything runs in your browser.</p>
-  <div class="plate" id="plate" role="img" aria-label="Thermal material preview"></div>
+  <header class="top"><h1>Thermal SVG</h1><a href="https://github.com/vcfgdev/skills" target="_blank" rel="noopener noreferrer" title="Source on GitHub (opens in a new tab)">GitHub</a></header>
+  <div class="preview">
+    <div class="plate" id="plate" role="img" aria-label="Thermal material preview"></div>
+    <button class="link" id="reset">Reset</button>
+  </div>
   <section class="tuning" aria-label="Material parameters">
     <div class="knob"><label for="word">Text</label><input id="word" type="text" maxlength="64" spellcheck="false" autocomplete="off"><output id="wordOut" for="word"></output></div>
     <div class="knob"><label for="dur">Loop duration</label><input id="dur" type="range" min="0.2" max="60" step="0.1"><output id="durOut" for="dur"></output></div>
@@ -28,22 +30,18 @@
     <div class="knob"><label for="heat">Heat blur</label><input id="heat" type="range" min="0" max="32" step="0.1"><output id="heatOut" for="heat"></output></div>
     <div class="knob"><label for="grain">Grain</label><input id="grain" type="range" min="0" max="1" step="0.01"><output id="grainOut" for="grain"></output></div>
   </section>
-  <div class="settings-foot"><button class="link" id="reset">Reset to original</button><button class="link" id="saveConfig">Save parameters</button><button class="link" id="loadConfig">Load parameters</button><input id="configFile" type="file" accept=".json,application/json" hidden></div>
-  <p class="hint" id="geometryNote"></p>
-  <p id="error" class="error" role="alert"></p>
   <details class="advanced"><summary>Color lookup table &amp; noise seed</summary>
     <div class="palette" id="paletteSwatches" aria-hidden="true"></div>
     <label for="palette">Dark-to-light colors · 2–32 #RRGGBB values, separated by spaces or commas</label>
     <textarea id="palette" spellcheck="false"></textarea>
     <div class="advanced-controls"><label for="seed" style="margin:0">Noise seed</label><input id="seed" type="number" min="0" max="9999" step="1"><button id="applyPalette" class="button">Apply colors</button></div>
-    <p class="footnote">The original maps onto white paper. Changing the last color also changes the surrounding background. Import custom outlines through the path, bounds and fillRule fields in a parameter JSON file.</p>
+    <p class="footnote">The original maps onto white paper. Changing the last color also changes the surrounding background.</p>
   </details>
   <section class="code" aria-label="Complete SVG source for the final effect">
     <div class="codebar"><strong>thermal.svg</strong><span class="meta" id="bytes"></span><div class="export"><button class="button" id="copy">Copy source</button><button class="button" id="downloadSvg">Download SVG</button><button class="button" id="downloadHtml">Save preview HTML</button></div></div>
     <textarea id="fallback" class="fallback" readonly aria-label="SVG source for manual copying" hidden></textarea>
     <div class="codebox" id="codebox"><pre id="code"></pre></div>
   </section>
-  <p class="footnote">Preview, complete source, clipboard and SVG download all use the same complete, looping effect. Scroll the code panel horizontally for long lines. This HTML works offline.</p>
   <noscript>Enable JavaScript to use the preview. The exported SVG itself contains no scripts.</noscript>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -57,7 +55,7 @@ let params = normalize(initial.params), toastTimer = null, current;
 const numericKeys = ['dur', 'angle', 'period', 'edge', 'heat', 'grain'];
 const safeJson = value => JSON.stringify(value, null, 2).replace(/</g, '\\u003c');
 const pretty = text => escapeXml(text).replace(/(&quot;.*?&quot;)/g, '<span class="value">$1</span>');
-function notify(message) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 2200); }
+function notify(message, duration = 2200) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, duration); }
 function download(name, text, type) {
   const url = URL.createObjectURL(new Blob([text], {type}));
   const a = document.createElement('a'); a.href = url; a.download = name; a.click();
@@ -80,35 +78,25 @@ function render(keepTime = true) {
   $('code').innerHTML = current.lines.map((line, i) => `<span class="line" data-line="${i + 1}">${pretty(line.text)}\n</span>`).join('');
   const bytes = new TextEncoder().encode(current.source).length;
   $('bytes').textContent = `${bytes.toLocaleString()} B`;
-  $('meta').textContent = `${(bytes / 1024).toFixed(2)} KiB · ${current.outlined ? 'Path' : 'Text'}`;
   $('wordOut').textContent = params.path !== null ? 'Custom' : current.outlined ? 'Outline' : 'Text';
-  $('geometryNote').textContent = current.outlined ? 'Vector outline: no font required. Default PRO preserves the original traced shape and filters.' : 'Live text: the exported SVG depends on system fonts. For identical lettering across devices, supply an outlined path.';
   $('paletteSwatches').innerHTML = params.palette.map(c => `<i style="background:${c}"></i>`).join('');
   if (!$('fallback').hidden) $('fallback').value = current.source;
 }
 function update(changes) {
   try {
     const next = normalize({...params, ...changes});
-    params = next; $('error').textContent = ''; render(); syncForm();
-  } catch (error) { $('error').textContent = error.message; }
+    params = next; $('toast').hidden = true; render(); syncForm();
+  } catch (error) { notify(error.message, 5000); }
 }
 for (const key of numericKeys) $(key).addEventListener('input', e => update({[key]: Number(e.target.value)}));
 $('word').addEventListener('input', e => update({word: e.target.value}));
 $('applyPalette').addEventListener('click', () => update({palette: $('palette').value.trim().split(/[\s,]+/), seed: Number($('seed').value)}));
-$('reset').addEventListener('click', () => {params = normalize(); $('error').textContent = ''; syncForm(); render(false);});
+$('reset').addEventListener('click', () => {params = normalize(); $('toast').hidden = true; syncForm(); render(false);});
 $('copy').addEventListener('click', async () => {
   try {await navigator.clipboard.writeText(current.source); $('fallback').hidden = true; notify('Complete SVG copied');}
   catch { $('fallback').hidden = false; $('fallback').value = current.source; $('fallback').focus(); $('fallback').select(); notify('Press Ctrl+C / ⌘C to copy the selected source'); }
 });
 $('downloadSvg').addEventListener('click', () => download('thermal.svg', current.source, 'image/svg+xml'));
-$('saveConfig').addEventListener('click', () => download('thermal.json', JSON.stringify(params, null, 2) + '\n', 'application/json'));
-$('loadConfig').addEventListener('click', () => $('configFile').click());
-$('configFile').addEventListener('change', async e => {
-  const file = e.target.files[0]; if (!file) return;
-  try {const next = normalize(JSON.parse(await file.text())); params = next; $('error').textContent = ''; syncForm(); render(false); notify('Parameters loaded');}
-  catch (error) {$('error').textContent = error.message;}
-  e.target.value = '';
-});
 $('downloadHtml').addEventListener('click', () => {
   const clone = document.documentElement.cloneNode(false);
   const head = document.createElement('head'), body = document.createElement('body');
@@ -117,7 +105,6 @@ $('downloadHtml').addEventListener('click', () => {
   clone.append(head, body);
   clone.querySelector('#thermal-config').textContent = safeJson({params});
   clone.querySelector('#toast').hidden = true; clone.querySelector('#fallback').hidden = true;
-  clone.querySelector('#error').textContent = '';
   download('thermal-preview.html', '<!doctype html>\n' + clone.outerHTML, 'text/html');
 });
 syncForm(); render(false);

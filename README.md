@@ -28,9 +28,10 @@ npx skills add vcfgdev/skills --skill explain-animation
 ## Browser previews and GitHub Pages
 
 The site is built from the skill's shared renderer, not a separate implementation.
-Everything runs in the browser; text and imported parameter files are not uploaded.
-The default PRO artwork is outlined. Other text depends on system fonts unless
-an outlined path is supplied.
+Everything runs in the browser; text is not uploaded.
+The original PRO outline is preserved. Custom Latin text uses bundled Archivo Black
+outlines for wide, heavy lettering that stays identical across devices. Characters
+outside that font use a system-font fallback, marked as `Text` in the preview.
 
 ```bash
 node --test creating-thermal-svg/scripts/thermal.test.mjs scripts/pages.test.mjs
@@ -68,4 +69,5 @@ No Pages setting or deployment is changed by running the local build or tests.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE), except the bundled Archivo Black glyph data, which retains its
+[SIL Open Font License](creating-thermal-svg/assets/archivo-black.mjs).
